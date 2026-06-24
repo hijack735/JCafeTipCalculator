@@ -108,7 +108,7 @@
 
     .tip-options {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
 
@@ -237,7 +237,7 @@
       }
 
       .tip-options {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .actions {
@@ -263,6 +263,10 @@
         <fieldset>
           <legend>Tip Percentage</legend>
           <div class="tip-options">
+            <label>
+              <input type="radio" name="tip" value="0">
+              <span>0%</span>
+            </label>
             <label>
               <input type="radio" name="tip" value="10">
               <span>10%</span>
