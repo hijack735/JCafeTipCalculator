@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JCafe Tip Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    section {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-weight: 600;
+      color: #555;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .prefix {
+      position: absolute;
+      left: 12px;
+      color: #999;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .input-group input {
+      padding-left: 32px;
+      width: 100%;
+    }
+
+    fieldset {
+      border: none;
+      padding: 0;
+    }
+
+    legend {
+      font-weight: 600;
+      color: #555;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .tip-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .tip-options label {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: #f5f5f5;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      gap: 0;
+      font-size: 16px;
+    }
+
+    .tip-options input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .tip-options label span {
+      font-weight: 600;
+    }
+
+    .tip-options input[type="radio"]:checked + span {
+      color: #667eea;
+    }
+
+    .tip-options input[type="radio"]:checked + span::before {
+      content: '✓ ';
+    }
+
+    .tip-options label:has(input:checked) {
+      background: #f0f4ff;
+      border-color: #667eea;
+    }
+
+    .result {
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .result span {
+      display: block;
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .amount {
+      display: block;
+      font-size: 36px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 12px;
+    }
+
+    .details {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .message {
+      min-height: 20px;
+      font-size: 14px;
+      color: #e74c3c;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .secondary {
+      background: #f0f0f0;
+      color: #555;
+    }
+
+    .secondary:hover {
+      background: #e0e0e0;
+    }
+
+    @media (max-width: 480px) {
+      section {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 24px;
+      }
+
+      .tip-options {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>💰 JCafe Tip Calculator</h1>
+
+      <form id="tip-form">
+        <label>
+          Bill Amount
+          <span class="input-group">
+            <span class="prefix">$</span>
+            <input id="bill" type="number" min="0" step="0.01" inputmode="decimal" placeholder="45.00" required>
+          </span>
+        </label>
+
+        <fieldset>
+          <legend>Tip Percentage</legend>
+          <div class="tip-options">
+            <label>
+              <input type="radio" name="tip" value="10">
+              <span>10%</span>
+            </label>
+            <label>
+              <input type="radio" name="tip" value="15" checked>
+              <span>15%</span>
+            </label>
+            <label>
+              <input type="radio" name="tip" value="20">
+              <span>20%</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <label>
+          Number of People
+          <input id="people" type="number" min="1" step="1" inputmode="numeric" value="2" required>
+        </label>
+
+        <div class="result" aria-live="polite">
+          <span>Each person should pay</span>
+          <output class="amount" id="amount">$0.00</output>
+          <div class="details" id="details"></div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="actions">
+          <button class="primary" type="submit">Calculate</button>
+          <button class="secondary" type="button" id="reset">Reset</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#tip-form");
+    const billInput = document.querySelector("#bill");
+    const peopleInput = document.querySelector("#people");
+    const amountOutput = document.querySelector("#amount");
+    const detailsOutput = document.querySelector("#details");
+    const messageOutput = document.querySelector("#message");
+    const resetButton = document.querySelector("#reset");
+
+    function money(value) {
+      return value.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+    }
+
+    function getTip() {
+      return Number(document.querySelector("input[name='tip']:checked").value);
+    }
+
+    function calculate() {
+      const bill = Number(billInput.value);
+      const tip = getTip();
+      const people = Number(peopleInput.value);
+
+      messageOutput.textContent = "";
+
+      if (!bill || bill <= 0) {
+        amountOutput.textContent = "$0.00";
+        detailsOutput.textContent = "";
+        messageOutput.textContent = "Enter a bill amount greater than zero.";
+        return;
+      }
+
+      if (!Number.isInteger(people) || people < 1) {
+        amountOutput.textContent = "$0.00";
+        detailsOutput.textContent = "";
+        messageOutput.textContent = "Enter at least 1 person.";
+        return;
+      }
+
+      const tipAsPercent = tip / 100;
+      const totalTipAmount = bill * tipAsPercent;
+      const totalBill = bill + totalTipAmount;
+      const billPerPerson = totalBill / people;
+
+      amountOutput.textContent = money(billPerPerson);
+      detailsOutput.textContent = `${money(totalBill)} total with ${tip}% tip, split ${people} ways.`;
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      calculate();
+    });
+
+    form.addEventListener("input", calculate);
+
+    resetButton.addEventListener("click", function () {
+      form.reset();
+      amountOutput.textContent = "$0.00";
+      detailsOutput.textContent = "";
+      messageOutput.textContent = "";
+      billInput.focus();
+    });
+  </script>
+</body>
+</html>
