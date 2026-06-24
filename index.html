@@ -311,6 +311,7 @@
     const detailsOutput = document.querySelector("#details");
     const messageOutput = document.querySelector("#message");
     const resetButton = document.querySelector("#reset");
+    const defaultTipInput = document.querySelector("input[name='tip'][value='15']");
 
     function money(value) {
       return value.toLocaleString("en-US", {
@@ -362,6 +363,7 @@
 
     resetButton.addEventListener("click", function () {
       form.reset();
+      defaultTipInput.checked = true;
       amountOutput.textContent = "$0.00";
       detailsOutput.textContent = "";
       messageOutput.textContent = "";
